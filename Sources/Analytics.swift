@@ -1,3 +1,3 @@
-struct swift_analytics {
+struct Analytics {
     var text = "Hello, World!"
 }

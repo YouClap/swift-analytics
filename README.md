@@ -10,7 +10,7 @@ An analytics abstraction layer for projects based in swift. Can be used in the s
 
 This is heavily inspired in the [Alicerce 🏗](https://github.com/mindera/alicerce) [analytics layer](https://github.com/Mindera/Alicerce/tree/master/Sources/Analytics) 🙇‍
 
-This is probably the best, simple and complete abstraction layer for analytics that the world have ever saw 🌍
+This is probably the best, simple and complete abstraction layer for analytics that the world has ever seen 🌍
 
 ## **What is the purpose of this repo?**
 

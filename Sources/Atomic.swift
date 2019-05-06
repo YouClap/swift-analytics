@@ -129,12 +129,13 @@ public final class Atomic<Value> {
 
     /// Atomically get or set the value of the variable.
     public var value: Value {
-        get {
-            return withValue { $0 }
-        }
+        get { return withValue { $0 } }
+        set { modify { $0 = newValue } }
+        _modify {
+            lock.lock()
+            defer { lock.unlock() }
 
-        set(newValue) {
-            swap(newValue)
+            yield &_value
         }
     }
 
@@ -154,7 +155,7 @@ public final class Atomic<Value> {
     ///
     /// - returns: The result of the action.
     @discardableResult
-    public func modify<Result>(_ action: (inout Value) throws -> Result) rethrows -> Result {
+    private func modify<Result>(_ action: (inout Value) throws -> Result) rethrows -> Result {
         lock.lock()
         defer { lock.unlock() }
 
@@ -174,20 +175,5 @@ public final class Atomic<Value> {
         defer { lock.unlock() }
 
         return try action(_value)
-    }
-
-    /// Atomically replace the contents of the variable.
-    ///
-    /// - parameters:
-    ///   - newValue: A new value for the variable.
-    ///
-    /// - returns: The old value.
-    @discardableResult
-    public func swap(_ newValue: Value) -> Value {
-        return modify { (value: inout Value) in
-            let oldValue = value
-            value = newValue
-            return oldValue
-        }
     }
 }

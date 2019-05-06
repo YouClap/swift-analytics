@@ -32,12 +32,7 @@ public extension Analytics {
         public func register(_ tracker: AnalyticsTracker) throws {
             precondition(tracker.identifier != identifier, "🙅‍♂️ Can't register a tracker with the same `id` as `self`!")
 
-            try _trackers.modify {
-                guard $0.contains(where: { $0.identifier == tracker.identifier }) == false else {
-                    throw Error.duplicateTracker(tracker.identifier)
-                }
-                $0.append(tracker)
-            }
+            _trackers.value += [tracker]
         }
 
         /// Unregisters a sub tracker, preventing any new analytics events from being sent to it. This method is thread
@@ -47,12 +42,7 @@ public extension Analytics {
         /// - Throws: An `Analytics.MultiTrackerError.inexistentTracker` error if a tracker with the same `id` isn't
         /// registered.
         public func unregister(_ tracker: AnalyticsTracker) throws {
-            try _trackers.modify {
-                guard $0.contains(where: { $0.identifier == tracker.identifier }) else {
-                    throw Error.inexistentTracker(tracker.identifier)
-                }
-                $0 = $0.filter { $0.identifier != tracker.identifier }
-            }
+            _trackers.value = _trackers.value.filter { $0.identifier != tracker.identifier }
         }
 
         // MARK: - Tracking
@@ -62,7 +52,7 @@ public extension Analytics {
         /// - Parameter event: The event to track.
         public func track<State, Action, ParameterKey>(_ event: Analytics.Event<State, Action, ParameterKey>)
         where ParameterKey: AnalyticsParameterKey {
-            let currentTrackers = trackers
+            let currentTrackers = _trackers.value
 
             guard currentTrackers.isEmpty == false else { return }
 

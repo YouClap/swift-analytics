@@ -1,26 +1,25 @@
 // Copied and modified from https://github.com/Mindera/Alicerce/blob/master/Sources/Analytics/Trackers/Analytics+MultiTracker.swift 🙏
 
 public extension Analytics {
-    final class MultiTracker<Tracker, State, Action, ParameterKey>: AnalyticsTracker where Tracker: AnalyticsTracker,
-    Tracker.State == State, Tracker.Action == Action, Tracker.ParameterKey == ParameterKey {
+    final class MultiTracker: AnalyticsTracker {
 
         enum Error: Swift.Error {
             /// A tracker with the same id already registered.
-            case duplicateTracker(Tracker.ID)
+            case duplicateTracker(AnalyticsTracker.ID)
 
             /// A tracker with the given id isn't registered.
-            case inexistentTracker(Tracker.ID)
+            case inexistentTracker(AnalyticsTracker.ID)
         }
 
         /// The registered sub trackers (read only).
-        public var trackers: [Tracker] { return _trackers.value }
+        public var trackers: [AnalyticsTracker] { return _trackers.value }
 
         /// The registered sub trackers.
-        private let _trackers: Atomic<[Tracker]>
+        private let _trackers: Atomic<[AnalyticsTracker]>
 
         /// Creates an analytics multi tracker instance.
         public init() {
-            self._trackers = Atomic<[Tracker]>([])
+            self._trackers = Atomic<[AnalyticsTracker]>([])
         }
 
         // MARK: - Sub-Tracker Management
@@ -30,7 +29,7 @@ public extension Analytics {
         /// - Parameter tracker: The analytics tracker to register.
         /// - Throws: An `Analytics.MultiTrackerError.duplicateTracker` error if a tracker with the same `id` is
         /// already registered.
-        public func register(_ tracker: Tracker) throws {
+        public func register(_ tracker: AnalyticsTracker) throws {
             precondition(tracker.identifier != identifier, "🙅‍♂️ Can't register a tracker with the same `id` as `self`!")
 
             try _trackers.modify {
@@ -47,7 +46,7 @@ public extension Analytics {
         /// - Parameter tracker: The analytics tracker to unregister.
         /// - Throws: An `Analytics.MultiTrackerError.inexistentTracker` error if a tracker with the same `id` isn't
         /// registered.
-        public func unregister(_ tracker: Tracker) throws {
+        public func unregister(_ tracker: AnalyticsTracker) throws {
             try _trackers.modify {
                 guard $0.contains(where: { $0.identifier == tracker.identifier }) else {
                     throw Error.inexistentTracker(tracker.identifier)
@@ -61,21 +60,14 @@ public extension Analytics {
         /// Tracks an analytics event, by propagating it to all the registered sub trackers.
         ///
         /// - Parameter event: The event to track.
-        public func track(_ event: Event<State, Action, ParameterKey>) {
+        public func track<State, Action, ParameterKey>(_ event: Analytics.Event<State, Action, ParameterKey>)
+        where ParameterKey: AnalyticsParameterKey {
             let currentTrackers = trackers
 
             guard currentTrackers.isEmpty == false else { return }
 
             currentTrackers.forEach { $0.track(event) }
         }
-
-//        public func track<State, Action, Key: ParameterKey>(_ event: Event<State, Action, Key>) {
-//            let currentTrackers = _trackers.value
-//
-//            guard currentTrackers.isEmpty == false else { return }
-//
-//            currentTrackers.forEach { $0.track(event) }
-//        }
     }
 }
 

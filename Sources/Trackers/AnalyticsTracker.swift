@@ -1,17 +1,17 @@
 // Copied and modified from https://github.com/Mindera/Alicerce/blob/master/Sources/Analytics/Trackers/AnalyticsTracker.swift 🙏
 
 public protocol AnalyticsTracker: AnyObject {
-    /// A type that represents all the possible types that the tracker's `Event.state` event can have.
-    associatedtype State
-
-    /// A type that represents all the possible types that the tracker's `Event.action` event can have.
-    associatedtype Action
-
-    /// A type that represents all the possible parameter keys that a tracker's `Event` parameter dictionary can have.
-    associatedtype ParameterKey: AnalyticsParameterKey
-
-    /// An analytics event.
-    typealias Event = Analytics.Event<State, Action, ParameterKey>
+//    /// A type that represents all the possible types that the tracker's `Event.state` event can have.
+//    associatedtype State
+//
+//    /// A type that represents all the possible types that the tracker's `Event.action` event can have.
+//    associatedtype Action
+//
+//    /// A type that represents all the possible parameter keys that a tracker's `Event` parameter dictionary can have.
+//    associatedtype ParameterKey: AnalyticsParameterKey
+//
+//    /// An analytics event.
+//    typealias Event = Analytics.Event<State, Action, ParameterKey>
 
     /// A type representing a tracker's identifier.
     typealias ID = String
@@ -22,7 +22,8 @@ public protocol AnalyticsTracker: AnyObject {
     /// Tracks an analytics event.
     ///
     /// - Parameter event: The event to track.
-    func track(_ event: Event)
+    func track<State, Action, ParameterKey>(_ event: Analytics.Event<State, Action, ParameterKey>)
+    where ParameterKey: AnalyticsParameterKey
 }
 
 extension AnalyticsTracker {

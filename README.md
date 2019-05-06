@@ -20,6 +20,18 @@ The analytics layer in the [Alicerce 🏗](https://github.com/mindera/alicerce) 
 
 This is probably a temporary repository while [Alicerce 🏗](https://github.com/mindera/alicerce) is not ready for `Swift Package Manager` with modules and linux.
 
-# About
+# Installation 🤝
+
+Currently, it only supports Swift Package Manager
+
+## Swift Package Manager
+
+Add the following line to your Package.swift
+
+```swift
+.package(url: "https://github.com/YouClap/swift-analytics.git", branch: "master")
+```
+
+# About 👨‍👩‍👧‍👦
 
 With ❤️ from [YouClap](https://youclap.tech) [Development team](mailto://development@youclap.tech)

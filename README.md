@@ -32,6 +32,8 @@ Add the following line to your Package.swift
 .package(url: "https://github.com/YouClap/swift-analytics.git", branch: "master")
 ```
 
+Then add `SwiftAnalytics` in the dependencies list of your target.
+
 # About 👨‍👩‍👧‍👦
 
 With ❤️ from [YouClap](https://youclap.tech) [Development team](mailto://development@youclap.tech)

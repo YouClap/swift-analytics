@@ -29,10 +29,14 @@ Currently, it only supports Swift Package Manager
 Add the following line to your Package.swift
 
 ```swift
-.package(url: "https://github.com/YouClap/swift-analytics.git", branch: "master")
+.package(url: "https://github.com/YouClap/swift-analytics.git", from: "0.1.0")
 ```
 
-Then add `SwiftAnalytics` in the dependencies list of your target.
+Then add `SwiftAnalytics` in the dependencies list of your target
+
+```swift
+.target(name: "Example", dependencies: ["SwiftAnalytics"]
+```
 
 # About 👨‍👩‍👧‍👦
 
